@@ -1,0 +1,563 @@
+/* css/styles.css */
+ 
+/* ============================================================
+   Theme Custom Properties
+   ============================================================ */
+ 
+:root[data-theme="light"] {
+  --bg-primary: #f3f4fa;
+  --bg-secondary: #ffffff;
+  --text-primary: #1e1b2e;
+  --text-secondary: #6b6f80;
+  --accent: #6366f1;
+  --border: #e5e6f0;
+  --shadow: rgba(30, 27, 60, 0.08);
+}
+ 
+:root[data-theme="dark"] {
+  --bg-primary: #14121f;
+  --bg-secondary: #1e1c2e;
+  --text-primary: #f1f0f6;
+  --text-secondary: #9a97ae;
+  --accent: #818cf8;
+  --border: #322f47;
+  --shadow: rgba(0, 0, 0, 0.45);
+}
+ 
+/* ============================================================
+   Base / Reset
+   ============================================================ */
+ 
+* {
+  box-sizing: border-box;
+}
+ 
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  overflow-x: hidden;
+}
+ 
+/* ============================================================
+   Layout
+   ============================================================ */
+ 
+header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ 
+header h1,
+header .app-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+ 
+section {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px var(--shadow);
+  border-radius: 20px;
+  padding: 1.75rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+ 
+section:hover {
+  box-shadow: 0 14px 36px var(--shadow);
+}
+ 
+/* ============================================================
+   Responsive Dashboard Grid (mobile-first)
+   ============================================================ */
+ 
+/* Mobile baseline: 320px+ — single stacked column */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "greeting"
+    "timer"
+    "todo"
+    "links";
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+ 
+#greeting-module { grid-area: greeting; }
+#timer-module { grid-area: timer; }
+#todo-module { grid-area: todo; }
+#links-module { grid-area: links; }
+ 
+/* Tablet: 768px+ — asymmetric 2-column layout instead of uniform equal tiles */
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-areas:
+      "greeting greeting"
+      "timer    todo"
+      "links    links";
+    gap: 1.75rem;
+    padding: 1.75rem;
+  }
+}
+ 
+/* Desktop: 1200px+ — same asymmetric layout, roomier proportions and card padding */
+@media (min-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1.7fr;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 2rem;
+    padding: 2rem;
+  }
+ 
+  section {
+    padding: 2.25rem;
+  }
+}
+ 
+/* Wide: 1600px+ — keep the same asymmetric shape, just cap width so cards
+   stay comfortably large instead of splitting into more, smaller columns */
+@media (min-width: 1600px) {
+  .dashboard-grid {
+    max-width: 1600px;
+  }
+}
+ 
+/* On larger screens, let the enlarged cards' key numbers scale up too */
+@media (min-width: 1200px) {
+  #timer-display {
+    font-size: 3.5rem;
+  }
+ 
+  #current-time {
+    font-size: 2rem;
+  }
+}
+ 
+/* ============================================================
+   Form Controls
+   ============================================================ */
+ 
+input, select, button {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  max-width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+ 
+input:hover, select:hover {
+  border-color: var(--accent);
+}
+ 
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B6F80' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.25rem;
+  min-height: 44px;
+}
+ 
+/* Default button = primary action */
+button {
+  cursor: pointer;
+  background-color: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  font-weight: 600;
+  min-width: 44px;
+  min-height: 44px;
+}
+ 
+button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--shadow);
+}
+ 
+button:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+ 
+/* Secondary / muted actions: outlined instead of solid */
+#timer-stop,
+#timer-reset,
+#duration-decrement,
+#duration-increment,
+.task-edit-btn,
+.task-edit-cancel {
+  background-color: transparent;
+  color: var(--text-primary);
+  border-color: var(--border);
+  font-weight: 500;
+}
+ 
+#timer-stop:hover,
+#timer-reset:hover,
+#duration-decrement:hover,
+#duration-increment:hover,
+.task-edit-btn:hover,
+.task-edit-cancel:hover {
+  background-color: var(--bg-primary);
+  border-color: var(--accent);
+  filter: none;
+  box-shadow: none;
+}
+ 
+/* Destructive actions: outlined red, quiet until hovered */
+.task-delete-btn,
+.link-delete-btn {
+  background-color: transparent;
+  color: #e5484d;
+  border-color: var(--border);
+  font-weight: 500;
+}
+ 
+.task-delete-btn:hover,
+.link-delete-btn:hover {
+  background-color: rgba(229, 72, 77, 0.1);
+  border-color: #e5484d;
+  filter: none;
+  box-shadow: none;
+}
+ 
+/* Touch target for checkboxes */
+input[type="checkbox"] {
+  min-width: 22px;
+  min-height: 22px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  padding: 0;
+}
+ 
+/* Touch target for select */
+select {
+  min-height: 44px;
+}
+ 
+/* ============================================================
+   Focus Indicators
+   ============================================================ */
+ 
+/* Visible focus ring for keyboard navigation (WCAG 2.4.7) */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+ 
+/* ============================================================
+   Module-specific Layout
+   ============================================================ */
+ 
+/* Todo add-form: wrap inputs and button so they stack on narrow screens */
+#todo-add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+ 
+#todo-input {
+  flex: 1 1 120px;
+  min-width: 0; /* allow shrinking below intrinsic width */
+}
+ 
+#todo-add-btn {
+  flex-shrink: 0;
+}
+ 
+#todo-input-error {
+  flex-basis: 100%; /* error message always on its own line */
+}
+ 
+/* Links add-form: same wrapping treatment */
+#links-add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+ 
+#link-label-input {
+  flex: 1 1 80px;
+  min-width: 0;
+}
+ 
+#link-url-input {
+  flex: 2 1 120px;
+  min-width: 0;
+}
+ 
+#link-add-btn {
+  flex-shrink: 0;
+}
+ 
+#link-input-error {
+  flex-basis: 100%;
+}
+ 
+/* Duration controls: keep the -/input/+ trio on one line and centered */
+#duration-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+ 
+#duration-input {
+  width: 4rem;
+  min-width: 0;
+  text-align: center;
+  font-weight: 600;
+}
+ 
+/* Timer module centering */
+#timer-module {
+  text-align: center;
+}
+ 
+#timer-display {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+ 
+#timer-controls {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+ 
+/* Task list items: keep controls from overflowing */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border);
+  list-style: none;
+}
+ 
+.task-item:last-child {
+  border-bottom: none;
+}
+ 
+/* Completed task: strikethrough title (Requirement 4.6) */
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+ 
+.task-title {
+  flex: 1 1 60px;
+  min-width: 0;
+  word-break: break-word;
+}
+ 
+.task-edit-input {
+  flex: 1 1 60px;
+  min-width: 0;
+}
+ 
+/* Remove default UL padding/margin for the task list */
+#task-list {
+  padding: 0;
+  margin: 0;
+}
+ 
+/* Sort bar */
+#todo-sort-bar {
+  margin-bottom: 0.75rem;
+}
+ 
+#sort-dropdown {
+  width: 100%;
+  max-width: 100%;
+}
+ 
+/* Links grid: wrap tiles responsively */
+#links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+ 
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45rem 0.5rem 0.45rem 0.9rem;
+  max-width: 100%;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+ 
+.link-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+ 
+.link-item a {
+  word-break: break-word;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  flex: 1 1 0;
+  min-width: 0;
+}
+ 
+.link-item a:hover {
+  text-decoration: underline;
+}
+ 
+.link-delete-btn {
+  flex-shrink: 0;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+ 
+/* Greeting module */
+#greeting-module {
+  text-align: center;
+}
+ 
+#greeting-text {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
+}
+ 
+#current-date {
+  color: var(--text-secondary);
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+ 
+#current-time {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  color: var(--accent);
+}
+ 
+/* ============================================================
+   Long-text Handling
+   ============================================================ */
+ 
+/* Prevent overflow on long task titles and link labels */
+.task-title {
+  word-break: break-word;
+}
+ 
+.link-item a {
+  word-break: break-word;
+}
+ 
+/* ============================================================
+   Utility
+   ============================================================ */
+ 
+.error-msg {
+  color: #e5484d;
+  font-size: 0.875rem;
+  display: block;
+  margin-top: 0.35rem;
+}
+ 
+[hidden] {
+  display: none !important;
+}
+ 
+/* Theme toggle button */
+#theme-toggle {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+ 
+#theme-toggle:hover {
+  border-color: var(--accent);
+  filter: none;
+  box-shadow: none;
+  transform: none;
+}
+ 
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+ 
+.toast {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem 1.1rem;
+  box-shadow: 0 10px 30px var(--shadow);
+  max-width: 320px;
+  word-break: break-word;
+  animation: toast-in 0.2s ease;
+}
+ 
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+ 

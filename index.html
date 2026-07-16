@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List Life Dashboard</title>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          document.documentElement.setAttribute(
+            "data-theme",
+            t === "dark" || t === "light" ? t : "light"
+          );
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+
+    <header>
+      <h1>Life Dashboard</h1>
+      <button id="theme-toggle" aria-label="Toggle theme">
+        <span id="theme-icon" aria-hidden="true">🌙</span>
+      </button>
+    </header>
+
+    <main class="dashboard-grid">
+
+      <section id="greeting-module">
+        <p id="greeting-text">Good Morning</p>
+        <p id="current-date">Friday, July 18, 2025</p>
+        <p id="current-time">14:05:32</p>
+      </section>
+
+      <section id="timer-module">
+        <div id="timer-display">25:00</div>
+        <div id="timer-controls">
+          <button id="timer-start">Start</button>
+          <button id="timer-stop">Stop</button>
+          <button id="timer-reset">Reset</button>
+        </div>
+        <div id="duration-controls">
+          <button id="duration-decrement" aria-label="Decrease duration">-</button>
+          <input id="duration-input" type="number" min="1" max="90" value="25" />
+          <button id="duration-increment" aria-label="Increase duration">+</button>
+        </div>
+        <div id="timer-complete-indicator" hidden>Session complete!</div>
+      </section>
+
+      <section id="todo-module">
+        <div id="todo-add-form">
+          <input id="todo-input" type="text" maxlength="200" placeholder="Add a new task..." />
+          <button id="todo-add-btn">Add</button>
+          <span id="todo-input-error" class="error-msg" hidden></span>
+        </div>
+        <div id="todo-sort-bar">
+          <select id="sort-dropdown">
+            <option>Newest First</option>
+            <option>Oldest First</option>
+            <option>A–Z</option>
+            <option>Z–A</option>
+            <option>Pending First</option>
+            <option>Completed First</option>
+          </select>
+        </div>
+        <ul id="task-list"></ul>
+      </section>
+
+      <section id="links-module">
+        <div id="links-add-form">
+          <input id="link-label-input" type="text" maxlength="50" placeholder="Label" />
+          <input id="link-url-input" type="text" placeholder="https://..." />
+          <button id="link-add-btn">Add Link</button>
+          <span id="link-input-error" class="error-msg" hidden></span>
+        </div>
+        <div id="links-limit-msg" hidden>Maximum 50 links reached.</div>
+        <div id="links-grid"></div>
+      </section>
+
+    </main>
+
+    <div id="toast-container" aria-live="polite"></div>
+
+    <script defer src="js/app.js"></script>
+  </body>
+</html>
